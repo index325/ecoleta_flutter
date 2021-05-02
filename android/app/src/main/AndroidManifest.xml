@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ecoleta">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="ecoleta"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyD2Ax_DabGvwFohDfj9oSffDjCGdgSdcCw"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -27,6 +30,7 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
