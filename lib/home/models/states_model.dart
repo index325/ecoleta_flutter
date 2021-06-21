@@ -1,30 +1,14 @@
-import 'dart:convert';
-
 class StatesModel {
-  final int id;
-  final String name;
+  final String value;
+  final String label;
 
   StatesModel({
-    required this.id,
-    required this.name,
+    required this.value,
+    required this.label,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-    };
-  }
-
-  factory StatesModel.fromMap(Map<String, dynamic> map) {
-    return StatesModel(
-      id: map['id'],
-      name: map['name'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory StatesModel.fromJson(String source) =>
-      StatesModel.fromMap(json.decode(source));
+  factory StatesModel.fromJson(Map<String, dynamic> statesjson) => StatesModel(
+        value: statesjson["sigla"],
+        label: statesjson["nome"],
+      );
 }

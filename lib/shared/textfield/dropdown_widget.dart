@@ -1,8 +1,21 @@
-import 'package:ecoleta/core/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:ecoleta/home/home_controller.dart';
 
 class DropdownButtonWidget extends StatefulWidget {
-  DropdownButtonWidget({Key? key}) : super(key: key);
+  final HomeController controller;
+  final Function(String? newValue) onChange;
+  final String label;
+  final List<dynamic> options;
+  final String value;
+
+  DropdownButtonWidget({
+    Key? key,
+    required this.controller,
+    required this.onChange,
+    required this.label,
+    required this.options,
+    required this.value,
+  }) : super(key: key);
 
   @override
   _DropdownButtonWidgetState createState() => _DropdownButtonWidgetState();
@@ -10,7 +23,6 @@ class DropdownButtonWidget extends StatefulWidget {
 
 class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
   late TextEditingController _controller;
-  String dropdownValue = 'One';
 
   @override
   void initState() {
@@ -37,23 +49,18 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: DropdownButtonFormField<String>(
-          decoration: InputDecoration.collapsed(hintText: ''),
-          value: dropdownValue,
+          decoration: InputDecoration.collapsed(hintText: widget.label),
+          value: widget.value == "" ? null : widget.value,
           icon: const Icon(Icons.keyboard_arrow_down_outlined),
           isExpanded: true,
           iconSize: 24,
           elevation: 16,
           style: const TextStyle(color: Colors.grey),
-          onChanged: (String? newValue) {
-            setState(() {
-              dropdownValue = newValue!;
-            });
-          },
-          items: <String>['One', 'Two', 'Free', 'Four']
-              .map<DropdownMenuItem<String>>((String value) {
+          onChanged: widget.onChange,
+          items: widget.options.map((option) {
             return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
+              value: option.value.toString(),
+              child: Text(option.label),
             );
           }).toList(),
         ),

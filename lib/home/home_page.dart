@@ -1,11 +1,15 @@
 import 'package:ecoleta/core/app_colors.dart';
 import 'package:ecoleta/core/app_images.dart';
 import 'package:ecoleta/core/app_text_styles.dart';
-import 'package:ecoleta/map_view/map_view_page.dart';
+import 'package:ecoleta/home/home_controller.dart';
+import 'package:ecoleta/home/service/location_service.dart';
+import 'package:ecoleta/map_view/models/arguments_model.dart';
 import 'package:ecoleta/shared/button/button_widget.dart';
 import 'package:ecoleta/shared/textfield/dropdown_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,12 +19,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // late Future<StatesModel> futureStates;
+  final service = LocationService();
+  final controller = HomeController(service: LocationService());
 
   @override
   void initState() {
+    getStates();
     super.initState();
-    // futureStates = fetchStates();
+    autorun((_) {
+      if (controller.selectedState.isNotEmpty) {
+        controller.selectedCity = "";
+        controller.cities = [];
+        getCities();
+      }
+    });
+  }
+
+  void getStates() async {
+    controller.states = await service.fetchStates();
+  }
+
+  void getCities() async {
+    controller.cities = await service.fetchCities(controller.selectedState);
   }
 
   @override
@@ -76,32 +96,56 @@ class _HomePageState extends State<HomePage> {
               ),
               Column(
                 children: [
-                  DropdownButtonWidget(),
+                  Observer(builder: (context) {
+                    return DropdownButtonWidget(
+                      label: "Estado",
+                      controller: controller,
+                      options: controller.states,
+                      value: controller.selectedState,
+                      onChange: (String? newValue) {
+                        controller.selectedState = newValue!;
+                      },
+                    );
+                  }),
                   SizedBox(
                     height: 8,
                   ),
-                  DropdownButtonWidget(),
+                  Observer(builder: (context) {
+                    return DropdownButtonWidget(
+                      label: "Cidade",
+                      controller: controller,
+                      options: controller.cities,
+                      value: controller.selectedCity,
+                      onChange: (String? newValue) {
+                        controller.selectedCity = newValue!;
+                      },
+                    );
+                  }),
                   SizedBox(
                     height: 24,
                   ),
                   Row(
                     children: [
-                      Expanded(
-                        child: ButtonWidget.green(
+                      Expanded(child: Observer(builder: (context) {
+                        return ButtonWidget.green(
                           icon: Icon(
                             Icons.arrow_forward_rounded,
                             color: AppColors.white,
                           ),
                           label: "Entrar",
+                          enabled: controller.enableNext,
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => MapViewPage(),
-                                ));
+                            if (controller.enableNext) {
+                              Navigator.pushReplacementNamed(
+                                  context, "/map-view",
+                                  arguments: ArgumentsModel(
+                                    city: controller.selectedCity,
+                                    uf: controller.selectedState,
+                                  ));
+                            }
                           },
-                        ),
-                      ),
+                        );
+                      })),
                     ],
                   ),
                 ],

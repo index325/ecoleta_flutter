@@ -1,12 +1,12 @@
-import 'package:ecoleta/core/app_colors.dart';
-import 'package:ecoleta/core/app_images.dart';
-import 'package:ecoleta/core/app_text_styles.dart';
-import 'package:ecoleta/map_view/models/discard_option_model.dart';
+import 'package:ecoleta/map_view/map_view_controller.dart';
+import 'package:ecoleta/map_view/models/arguments_model.dart';
+import 'package:ecoleta/map_view/service/map_service.dart';
 import 'package:ecoleta/map_view/widgets/discart_option/discart_option_widget.dart';
+import 'package:ecoleta/map_view/widgets/map_view_appbar.dart';
+import 'package:ecoleta/map_view/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
-import 'dart:math' as math;
 
 class MapViewPage extends StatefulWidget {
   const MapViewPage({Key? key}) : super(key: key);
@@ -17,23 +17,33 @@ class MapViewPage extends StatefulWidget {
 
 class _MapViewPageState extends State<MapViewPage> {
   Completer<GoogleMapController> _controller = Completer();
-
-  List<DiscardOptionModel> discardOptions = [
-    DiscardOptionModel(
-        isSelected: false,
-        name: "Resíduos Eletrônicos",
-        imagePath: AppImages.eletronicos),
-    DiscardOptionModel(
-      isSelected: false,
-      name: "Resíduos Eletrônicos",
-      imagePath: AppImages.eletronicos,
-    ),
-  ];
+  final service = MapService();
+  final controller = MapViewController(service: MapService());
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      final arguments =
+          ModalRoute.of(context)!.settings.arguments as ArgumentsModel;
+
+      getPoints(arguments);
+    });
+
+    super.initState();
+  }
+
+  getPoints(args) async {
+    // print(await service.fetchPoints(
+    //   itemsList: [],
+    //   city: args.city,
+    //   uf: args.uf,
+    // ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,69 +52,13 @@ class _MapViewPageState extends State<MapViewPage> {
         preferredSize: Size.fromHeight(160),
         child: Padding(
           padding: const EdgeInsets.only(top: 16),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  Container(
-                    child: Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.rotationY(math.pi),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Icon(
-                              Icons.logout,
-                              color: AppColors.green,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "😃 Bem vindo.",
-                        style: AppTextStyles.title20bold,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Encontre no mapa um ponto de coleta.",
-                        style: AppTextStyles.body,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+          child: MapViewAppbar(),
         ),
       ),
       body: Container(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-          ),
+          child: MapWidget(kGooglePlex: _kGooglePlex, controller: _controller),
         ),
       ),
       bottomNavigationBar: Padding(
@@ -115,14 +69,13 @@ class _MapViewPageState extends State<MapViewPage> {
             padding: const EdgeInsets.only(right: 24),
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: discardOptions
+              children: controller.items
                   .map((e) => DiscartOptionWidget(
-                        imagePath: e.imagePath,
-                        label: e.name,
-                        isSelected: e.isSelected,
+                        imagePath: e.imageUrl,
+                        label: e.title,
+                        isSelected: false,
                         onTap: () {
-                          e.isSelected = !e.isSelected;
-                          setState(() {});
+                          print("teste");
                         },
                       ))
                   .toList(),

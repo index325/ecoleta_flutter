@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:ecoleta/core/app_colors.dart';
-import 'package:ecoleta/core/app_images.dart';
 import 'package:ecoleta/core/app_text_styles.dart';
 
 class DiscartOptionWidget extends StatefulWidget {

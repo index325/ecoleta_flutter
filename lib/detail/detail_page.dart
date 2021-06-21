@@ -101,6 +101,7 @@ class DetailPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 12, right: 4),
                   child: ButtonWidget.green(
+                    enabled: true,
                     icon: FaIcon(
                       FontAwesomeIcons.whatsapp,
                       color: AppColors.white,
@@ -116,6 +117,7 @@ class DetailPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 12, left: 4),
                   child: ButtonWidget.green(
+                    enabled: true,
                     icon: Icon(
                       Icons.mail_outline,
                       color: AppColors.white,
