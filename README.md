@@ -22,8 +22,16 @@ This project was developed with the following technologies:
 
 To access the previous application (server, web and app) [click here](https://github.com/index325/nlw1_projeto).
 
-## :information_source: How To Use
+## :information_source: What you need to run this app
 
 To clone and run this application, you'll need [Git](https://git-scm.com), [Flutter](https://flutter.dev/) installed on your computer.
+
+After that, run:
+```bash
+$ flutter doctor
+```
+That will provide to you informations of what you need to install or update on your computer to start using Flutter.
+
+So, when you finish, open [VSCode](https://code.visualstudio.com/) and install the Flutter extention. When it's done, you're good to go with Flutter and this application! 😜
 
 Made with ♥ by Gabriel Orlando :wave: [Contact me!](https://www.linkedin.com/in/gabriel-orlando-07266a117/)
