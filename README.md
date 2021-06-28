@@ -11,11 +11,6 @@ This project is a reprodution of an application that I developed on the NLW boot
 Ecoleta is a project developed based on international environment week. 
 That aims to connect people to companies that collect specific waste such as light bulbs, batteries, cooking oil, etc.
 
-<h1 align="center">
-    <img alt="Example" title="Example" src="./web/src/assets/example.png" width="500px" />
-</h1>
-
-
 ## :rocket: Technologies
 
 This project was developed with the following technologies:
