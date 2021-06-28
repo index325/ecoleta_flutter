@@ -36,6 +36,7 @@ class PointModel {
       'image': image,
       'latitude': latitude,
       'longitude': longitude,
+      'address': address
     };
   }
 

@@ -136,12 +136,14 @@ class _HomePageState extends State<HomePage> {
                           enabled: controller.enableNext,
                           onTap: () {
                             if (controller.enableNext) {
-                              Navigator.pushReplacementNamed(
-                                  context, "/map-view",
-                                  arguments: ArgumentsModel(
-                                    city: controller.selectedCity,
-                                    uf: controller.selectedState,
-                                  ));
+                              Navigator.pushNamed(
+                                context,
+                                "/map-view",
+                                arguments: ArgumentsModel(
+                                  city: controller.selectedCity,
+                                  uf: controller.selectedState,
+                                ),
+                              );
                             }
                           },
                         );

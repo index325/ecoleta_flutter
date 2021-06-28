@@ -1,17 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecoleta/detail/detail_controller.dart';
 import 'package:ecoleta/detail/models/detail_arguments.dart';
-import 'package:ecoleta/detail/models/detail_items_model.dart';
-import 'package:ecoleta/map_view/models/item_model.dart';
-import 'package:ecoleta/map_view/models/point_model.dart';
+import 'package:ecoleta/detail/widgets/detail_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:ecoleta/core/app_colors.dart';
-import 'package:ecoleta/core/app_images.dart';
 import 'package:ecoleta/core/app_text_styles.dart';
 import 'package:ecoleta/detail/service/detail_service.dart';
-import 'package:ecoleta/shared/button/button_widget.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -86,7 +82,17 @@ class _DetailPageState extends State<DetailPage> {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
-                child: Image.asset(AppImages.coletoraPlaceholder),
+                child: Observer(builder: (_) {
+                  if (controller.point.imageUrl != "") {
+                    return CachedNetworkImage(
+                      imageUrl: controller.point.imageUrl,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    );
+                  }
+                  return Container();
+                }),
               ),
               SizedBox(
                 height: 8,
@@ -121,63 +127,17 @@ class _DetailPageState extends State<DetailPage> {
                 "Endereço",
                 style: AppTextStyles.detailTitleAddress,
               ),
-              Text(
-                controller.point.address,
-                style: AppTextStyles.detailBodyAddress,
-              ),
+              Observer(builder: (_) {
+                return Text(
+                  controller.point.address,
+                  style: AppTextStyles.detailBodyAddress,
+                );
+              }),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: AppColors.lightGrey,
-              width: 2,
-            ),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12, right: 4),
-                  child: ButtonWidget.green(
-                    enabled: true,
-                    icon: FaIcon(
-                      FontAwesomeIcons.whatsapp,
-                      color: AppColors.white,
-                    ),
-                    label: "Whatsapp",
-                    onTap: () {
-                      print("teste");
-                    },
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 12, left: 4),
-                  child: ButtonWidget.green(
-                    enabled: true,
-                    icon: Icon(
-                      Icons.mail_outline,
-                      color: AppColors.white,
-                    ),
-                    label: "E-mail",
-                    onTap: () {
-                      print("teste");
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: DetailBottomNavigationBar(),
     );
   }
 }
