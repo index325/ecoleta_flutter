@@ -59,4 +59,10 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     height: 2,
   );
+
+  static final TextStyle pointName = GoogleFonts.roboto(
+    color: AppColors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.w700,
+  );
 }

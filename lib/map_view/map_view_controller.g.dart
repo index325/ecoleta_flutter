@@ -28,13 +28,13 @@ mixin _$MapViewController on _MapViewControllerBase, Store {
       Atom(name: '_MapViewControllerBase.selectedItems');
 
   @override
-  List<int> get selectedItems {
+  ObservableList<int> get selectedItems {
     _$selectedItemsAtom.reportRead();
     return super.selectedItems;
   }
 
   @override
-  set selectedItems(List<int> value) {
+  set selectedItems(ObservableList<int> value) {
     _$selectedItemsAtom.reportWrite(value, super.selectedItems, () {
       super.selectedItems = value;
     });
@@ -43,16 +43,30 @@ mixin _$MapViewController on _MapViewControllerBase, Store {
   final _$pointsAtom = Atom(name: '_MapViewControllerBase.points');
 
   @override
-  List<PointModel> get points {
+  ObservableList<PointModel> get points {
     _$pointsAtom.reportRead();
     return super.points;
   }
 
   @override
-  set points(List<PointModel> value) {
+  set points(ObservableList<PointModel> value) {
     _$pointsAtom.reportWrite(value, super.points, () {
       super.points = value;
     });
+  }
+
+  final _$_MapViewControllerBaseActionController =
+      ActionController(name: '_MapViewControllerBase');
+
+  @override
+  dynamic handleIncrementItem(int i) {
+    final _$actionInfo = _$_MapViewControllerBaseActionController.startAction(
+        name: '_MapViewControllerBase.handleIncrementItem');
+    try {
+      return super.handleIncrementItem(i);
+    } finally {
+      _$_MapViewControllerBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

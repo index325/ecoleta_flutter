@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                       "Ecoleta",
                       style: AppTextStyles.title20bold,
                     ),
-                  )
+                  ),
                 ],
               ),
               Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:ecoleta/core/app_colors.dart';
 import 'package:ecoleta/core/app_text_styles.dart';
@@ -40,7 +41,7 @@ class _DiscartOptionWidgetState extends State<DiscartOptionWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(widget.imagePath),
+              SvgPicture.network(widget.imagePath),
               SizedBox(height: 12),
               Text(
                 widget.label,

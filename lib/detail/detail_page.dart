@@ -1,12 +1,45 @@
+import 'package:ecoleta/detail/detail_controller.dart';
+import 'package:ecoleta/detail/models/detail_arguments.dart';
+import 'package:ecoleta/detail/models/detail_items_model.dart';
+import 'package:ecoleta/map_view/models/item_model.dart';
+import 'package:ecoleta/map_view/models/point_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:ecoleta/core/app_colors.dart';
 import 'package:ecoleta/core/app_images.dart';
 import 'package:ecoleta/core/app_text_styles.dart';
+import 'package:ecoleta/detail/service/detail_service.dart';
 import 'package:ecoleta/shared/button/button_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
+
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  final service = DetailService();
+  final controller = DetailController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      final arguments =
+          ModalRoute.of(context)!.settings.arguments as DetailArguments;
+      getDetail(arguments);
+    });
+    super.initState();
+  }
+
+  getDetail(DetailArguments args) async {
+    final model = await service.fetchDetail(id: args.id);
+
+    controller.items = model.items;
+    controller.point = model.point;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,17 +91,29 @@ class DetailPage extends StatelessWidget {
               SizedBox(
                 height: 8,
               ),
-              Text(
-                "Colectora",
-                style: AppTextStyles.title,
-              ),
+              Observer(builder: (_) {
+                return Text(
+                  "${controller.point.name}",
+                  style: AppTextStyles.title,
+                );
+              }),
               SizedBox(
                 height: 16,
               ),
-              Text(
-                "Resíduos Eletrônicos, Lâmpadas, Pilhas e Baterias",
-                style: AppTextStyles.detailTags,
-              ),
+              Observer(builder: (_) {
+                return Column(
+                  children: [
+                    Wrap(
+                      children: controller.items
+                          .map((e) => Text(
+                                "${e.title}, ",
+                                style: AppTextStyles.detailTags,
+                              ))
+                          .toList(),
+                    ),
+                  ],
+                );
+              }),
               SizedBox(
                 height: 40,
               ),
@@ -77,7 +122,7 @@ class DetailPage extends StatelessWidget {
                 style: AppTextStyles.detailTitleAddress,
               ),
               Text(
-                "Rio do Sul, Santa Catarina Guilherme Gemballa, Jardim América Nº 260",
+                controller.point.address,
                 style: AppTextStyles.detailBodyAddress,
               ),
             ],
